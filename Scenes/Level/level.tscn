@@ -18,3 +18,9 @@ position = Vector2(258, 185)
 [node name="Water" parent="." instance=ExtResource("2_xiycq")]
 z_index = 1
 position = Vector2(2, 627)
+
+[node name="AnimalRespawn" type="Timer" parent="."]
+wait_time = 2.5
+one_shot = true
+
+[connection signal="timeout" from="AnimalRespawn" to="." method="_on_animal_respawn_timeout"]
