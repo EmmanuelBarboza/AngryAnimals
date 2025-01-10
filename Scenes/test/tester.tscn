@@ -143,12 +143,10 @@ texture = ExtResource("4_fq811")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Plank"]
 position = Vector2(-33.8865, 0.5)
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_lnyr1")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Plank"]
 position = Vector2(119.699, -49.7405)
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_6huf8")
 
 [connection signal="input_event" from="Bird2" to="Bird2" method="_on_input_event"]
