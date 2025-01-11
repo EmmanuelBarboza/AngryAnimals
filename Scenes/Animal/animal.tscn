@@ -1,7 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://b5f11edk3xq2k"]
+[gd_scene load_steps=7 format=3 uid="uid://b5f11edk3xq2k"]
 
 [ext_resource type="Script" path="res://Scenes/Animal/animal.gd" id="1_2mmnw"]
 [ext_resource type="Texture2D" uid="uid://dvbfm1b2qghit" path="res://assets/player/parrot.png" id="1_5aqur"]
+[ext_resource type="Texture2D" uid="uid://8e3nd1dsnd7s" path="res://assets/items/arrow.png" id="3_3dvyk"]
+[ext_resource type="AudioStream" uid="uid://x2hd4deyb6rk" path="res://assets/audio/stretch2.ogg" id="4_13rrd"]
+[ext_resource type="Texture2D" uid="uid://d0cpa72o8lfkm" path="res://icon.svg" id="5_6pp44"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1x221"]
 radius = 19.5
@@ -29,6 +32,58 @@ offset_bottom = -44.0
 scale = Vector2(1.02895, 1.22804)
 theme_override_colors/font_color = Color(1.58831e-06, 0, 0.550048, 1)
 text = "DEBUG"
+
+[node name="Arrow" type="Sprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("3_3dvyk")
+offset = Vector2(150, 0)
+
+[node name="StretchSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_13rrd")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 1, 1)
+scale = Vector2(0.075, 0.075)
+texture = ExtResource("5_6pp44")
+
+[node name="Label" type="Label" parent="Sprite2D2"]
+offset_right = 453.0
+offset_bottom = 240.0
+theme_override_font_sizes/font_size = 100
+text = "_start"
+
+[node name="Sprite2D3" type="Sprite2D" parent="."]
+modulate = Color(0, 0.792157, 0, 1)
+scale = Vector2(0.075, 0.075)
+texture = ExtResource("5_6pp44")
+
+[node name="Label" type="Label" parent="Sprite2D3"]
+offset_right = 440.0
+offset_bottom = 267.0
+theme_override_font_sizes/font_size = 100
+text = "_drag_start"
+
+[node name="Sprite2D4" type="Sprite2D" parent="."]
+modulate = Color(0.376547, 0.342273, 0, 1)
+scale = Vector2(0.075, 0.075)
+texture = ExtResource("5_6pp44")
+
+[node name="Label" type="Label" parent="Sprite2D4"]
+offset_right = 493.0
+offset_bottom = 240.0
+theme_override_font_sizes/font_size = 100
+text = "_dragged_vector"
+
+[node name="Sprite2D5" type="Sprite2D" parent="."]
+modulate = Color(0.311908, 0.000811484, 0.774166, 1)
+scale = Vector2(0.085, 0.085)
+texture = ExtResource("5_6pp44")
+
+[node name="Label" type="Label" parent="Sprite2D5"]
+offset_right = 294.0
+offset_bottom = 188.0
+theme_override_font_sizes/font_size = 100
+text = "_last_dragged"
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="screen_exited" from="OnScreenNotifier" to="." method="_on_screen_exited"]
