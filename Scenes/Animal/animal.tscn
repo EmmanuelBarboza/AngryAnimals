@@ -1,18 +1,26 @@
-[gd_scene load_steps=8 format=3 uid="uid://b5f11edk3xq2k"]
+[gd_scene load_steps=10 format=3 uid="uid://b5f11edk3xq2k"]
 
 [ext_resource type="Script" path="res://Scenes/Animal/animal.gd" id="1_2mmnw"]
 [ext_resource type="Texture2D" uid="uid://dvbfm1b2qghit" path="res://assets/player/parrot.png" id="1_5aqur"]
 [ext_resource type="Texture2D" uid="uid://8e3nd1dsnd7s" path="res://assets/items/arrow.png" id="3_3dvyk"]
 [ext_resource type="AudioStream" uid="uid://x2hd4deyb6rk" path="res://assets/audio/stretch2.ogg" id="4_13rrd"]
+[ext_resource type="AudioStream" uid="uid://c3x1flwo5lkan" path="res://assets/audio/kick_wood.ogg" id="4_r3oa1"]
 [ext_resource type="Texture2D" uid="uid://d0cpa72o8lfkm" path="res://icon.svg" id="5_6pp44"]
 [ext_resource type="AudioStream" uid="uid://ckimiwt4ttmr" path="res://assets/audio/catapult.ogg" id="5_dow18"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ffvo1"]
+bounce = 0.3
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1x221"]
 radius = 19.5
 
 [node name="Animal" type="RigidBody2D"]
 input_pickable = true
+physics_material_override = SubResource("PhysicsMaterial_ffvo1")
+sleeping = true
 freeze = true
+contact_monitor = true
+max_contacts_reported = 1
 script = ExtResource("1_2mmnw")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -39,6 +47,9 @@ scale = Vector2(0.3, 0.3)
 texture = ExtResource("3_3dvyk")
 offset = Vector2(150, 0)
 
+[node name="KickSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_r3oa1")
+
 [node name="StretchSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_13rrd")
 
@@ -46,6 +57,7 @@ stream = ExtResource("4_13rrd")
 stream = ExtResource("5_dow18")
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]
+visible = false
 modulate = Color(0, 0, 1, 1)
 scale = Vector2(0.075, 0.075)
 texture = ExtResource("5_6pp44")
@@ -57,6 +69,7 @@ theme_override_font_sizes/font_size = 100
 text = "_start"
 
 [node name="Sprite2D3" type="Sprite2D" parent="."]
+visible = false
 modulate = Color(0, 0.792157, 0, 1)
 scale = Vector2(0.075, 0.075)
 texture = ExtResource("5_6pp44")
@@ -68,6 +81,7 @@ theme_override_font_sizes/font_size = 100
 text = "_drag_start"
 
 [node name="Sprite2D4" type="Sprite2D" parent="."]
+visible = false
 modulate = Color(0.376547, 0.342273, 0, 1)
 scale = Vector2(0.075, 0.075)
 texture = ExtResource("5_6pp44")
@@ -79,6 +93,7 @@ theme_override_font_sizes/font_size = 100
 text = "_dragged_vector"
 
 [node name="Sprite2D5" type="Sprite2D" parent="."]
+visible = false
 modulate = Color(0.311908, 0.000811484, 0.774166, 1)
 scale = Vector2(0.085, 0.085)
 texture = ExtResource("5_6pp44")
@@ -90,4 +105,5 @@ theme_override_font_sizes/font_size = 100
 text = "_last_dragged"
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="sleeping_state_changed" from="." to="." method="_on_sleeping_state_changed"]
 [connection signal="screen_exited" from="OnScreenNotifier" to="." method="_on_screen_exited"]

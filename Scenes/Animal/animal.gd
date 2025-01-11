@@ -17,6 +17,7 @@ const IMPULSE_MAX: float = 1200.0
 @onready var stretch_sound: AudioStreamPlayer2D = $StretchSound
 @onready var arrow: Sprite2D = $Arrow
 @onready var launch_sound: AudioStreamPlayer2D = $LaunchSound
+@onready var kick_sound: AudioStreamPlayer2D = $KickSound
 
 
 @onready var sprite_start: Sprite2D = $Sprite2D2
@@ -31,11 +32,11 @@ var _drag_start: Vector2  = Vector2.ZERO
 var _dragged_vector: Vector2 = Vector2.ZERO
 var _last_dragged_vector: Vector2 = Vector2.ZERO
 var _arrow_scale_x: float = 0.0
+var _last_collision_count: int = 0
 
 
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_arrow_scale_x = arrow.scale.x #Escala base de la flecha
 	arrow.hide()
@@ -133,11 +134,23 @@ func update_drag() -> void:
 	drag_in_limits()
 	scale_arrow()
 
+func play_collision() -> void:
+	if (_last_collision_count == 0 and 
+		get_contact_count() > 0 and kick_sound.playing == false):
+			kick_sound.play()
+			
+	_last_collision_count = get_contact_count()
+
+func update_flight() -> void:
+	play_collision()
+
 func update(_delta: float) -> void:
 	#Actualiza que hace el animal segun su estado
 	match  _state:
 		ANIMAL_STATE.DRAG:
 			update_drag()
+		ANIMAL_STATE.RELEASE:
+			update_flight()
 
 func _on_screen_exited() -> void:
 	#Cuando el animal sale de la pantalla lo despawneamos
@@ -156,3 +169,13 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 	#El estadoa a drag
 	if _state == ANIMAL_STATE.READY and event.is_action_pressed("drag"):
 		set_new_state(ANIMAL_STATE.DRAG)
+
+
+
+func _on_sleeping_state_changed() -> void:
+	#Cuando el animal entre en sleeping state
+	#osea que no esta en movimiento
+	#lo despawneamos con una deffered call para evitar conflictos con las fisicas
+	if sleeping == true:
+		call_deferred("despawn")
+		
