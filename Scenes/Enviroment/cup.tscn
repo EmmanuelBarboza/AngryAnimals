@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://c5ru3o7veea70"]
+
+[node name="Cup" type="StaticBody2D"]

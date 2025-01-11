@@ -63,11 +63,15 @@ func show_vectors() -> void:
 	sprite_dragged_vector.position = _dragged_vector 
 	sprite_last_dragged.position = _last_dragged_vector
 
-func set_release():
+func set_release() -> void:
 	arrow.hide()
 	freeze = false
 	apply_central_impulse(get_impulse())
 	launch_sound.play()
+
+func set_drag() -> void:
+	_drag_start = get_global_mouse_position()
+	arrow.show()
 
 func set_new_state(new_state: ANIMAL_STATE) -> void:
 	#Esta funcion maneja el cambio de estado del animal
@@ -79,8 +83,8 @@ func set_new_state(new_state: ANIMAL_STATE) -> void:
 		#(DENTRO DE SET_RELEASE())
 		set_release()
 	elif _state == ANIMAL_STATE.DRAG:
-		_drag_start = get_global_mouse_position()
-		arrow.show()
+		set_drag()
+
 
 func detect_release() -> bool:
 	#Esta funcion detecta si estamos en el estado de arrastrar y si se suelta el mouse
@@ -106,7 +110,7 @@ func play_stretch_sound() -> void:
 		if stretch_sound.playing == false:
 			stretch_sound.play()
 
-func get_dragged_vector(gmp: Vector2) -> Vector2:
+func get_dragged_vector(_gmp: Vector2) -> Vector2:
 	return get_global_mouse_position() - _drag_start
 
 func drag_in_limits() -> void:
@@ -129,7 +133,7 @@ func update_drag() -> void:
 	drag_in_limits()
 	scale_arrow()
 
-func update(delta: float) -> void:
+func update(_delta: float) -> void:
 	#Actualiza que hace el animal segun su estado
 	match  _state:
 		ANIMAL_STATE.DRAG:
@@ -146,7 +150,7 @@ func despawn() -> void:
 	queue_free()
 
 #Señal que detecta inputs de mouse
-func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	#Aca basicamente estamos comprobando que el estado sea READY
 	#Y que si tambien el evento de la señal es drag, entonces queremos cambiar
 	#El estadoa a drag
