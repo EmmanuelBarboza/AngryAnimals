@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://b5f11edk3xq2k"]
+[gd_scene load_steps=8 format=3 uid="uid://b5f11edk3xq2k"]
 
 [ext_resource type="Script" path="res://Scenes/Animal/animal.gd" id="1_2mmnw"]
 [ext_resource type="Texture2D" uid="uid://dvbfm1b2qghit" path="res://assets/player/parrot.png" id="1_5aqur"]
 [ext_resource type="Texture2D" uid="uid://8e3nd1dsnd7s" path="res://assets/items/arrow.png" id="3_3dvyk"]
 [ext_resource type="AudioStream" uid="uid://x2hd4deyb6rk" path="res://assets/audio/stretch2.ogg" id="4_13rrd"]
 [ext_resource type="Texture2D" uid="uid://d0cpa72o8lfkm" path="res://icon.svg" id="5_6pp44"]
+[ext_resource type="AudioStream" uid="uid://ckimiwt4ttmr" path="res://assets/audio/catapult.ogg" id="5_dow18"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1x221"]
 radius = 19.5
@@ -40,6 +41,9 @@ offset = Vector2(150, 0)
 
 [node name="StretchSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_13rrd")
+
+[node name="LaunchSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_dow18")
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]
 modulate = Color(0, 0, 1, 1)

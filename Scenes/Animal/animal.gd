@@ -16,6 +16,13 @@ const IMPULSE_MAX: float = 1200.0
 @onready var label: Label = $Label
 @onready var stretch_sound: AudioStreamPlayer2D = $StretchSound
 @onready var arrow: Sprite2D = $Arrow
+@onready var launch_sound: AudioStreamPlayer2D = $LaunchSound
+
+
+@onready var sprite_start: Sprite2D = $Sprite2D2
+@onready var sprite_drag_start: Sprite2D = $Sprite2D3
+@onready var sprite_dragged_vector: Sprite2D = $Sprite2D4
+@onready var sprite_last_dragged: Sprite2D = $Sprite2D5
 
 #Variables
 var _state: ANIMAL_STATE = ANIMAL_STATE.READY
@@ -23,16 +30,14 @@ var _start: Vector2 = Vector2.ZERO
 var _drag_start: Vector2  = Vector2.ZERO
 var _dragged_vector: Vector2 = Vector2.ZERO
 var _last_dragged_vector: Vector2 = Vector2.ZERO
+var _arrow_scale_x: float = 0.0
 
-@onready var sprite_start: Sprite2D = $Sprite2D2
-@onready var sprite_drag_start: Sprite2D = $Sprite2D3
-@onready var sprite_dragged_vector: Sprite2D = $Sprite2D4
-@onready var sprite_last_dragged: Sprite2D = $Sprite2D5
 
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	_arrow_scale_x = arrow.scale.x #Escala base de la flecha
 	arrow.hide()
 	_start = position
 
@@ -46,11 +51,23 @@ func _physics_process(delta: float) -> void:
 	show_vectors()
 	
 
+func get_impulse() -> Vector2:
+	#Esta funcion devuelve un vector2, que basicamente es el vector
+	#de cuanto arrastramos al animal, lo multiplicamos por -1
+	#para darle la vuelta y asi tener un vector que indica una direccion
+	return _dragged_vector * -1 * IMPULSE_MULT
+
 func show_vectors() -> void:
 	sprite_start.global_position = _start
 	sprite_drag_start.global_position = _drag_start
 	sprite_dragged_vector.position = _dragged_vector 
 	sprite_last_dragged.position = _last_dragged_vector
+
+func set_release():
+	arrow.hide()
+	freeze = false
+	apply_central_impulse(get_impulse())
+	launch_sound.play()
 
 func set_new_state(new_state: ANIMAL_STATE) -> void:
 	#Esta funcion maneja el cambio de estado del animal
@@ -58,9 +75,9 @@ func set_new_state(new_state: ANIMAL_STATE) -> void:
 	if _state == ANIMAL_STATE.RELEASE:
 		#Si es nuevo estado es RELEASE osea que lo solto
 		#Entonces colocamos freeze en falso, para que el motor de fisicas
-		#Tome control sobre el animal
-		arrow.hide()
-		freeze = false
+		#Tome control sobre el animal 
+		#(DENTRO DE SET_RELEASE())
+		set_release()
 	elif _state == ANIMAL_STATE.DRAG:
 		_drag_start = get_global_mouse_position()
 		arrow.show()
@@ -74,6 +91,14 @@ func detect_release() -> bool:
 	return false
 
 func scale_arrow() -> void:
+	#Esta variable contiene la magnitud del vector obtenido de get_impulse()
+	#usamos length para obtener la magnitud de este
+	var imp_length = get_impulse().length()
+	#Esta variable reprensta un porcentaje de cuanto queremos escalar la flecha
+	var perc = imp_length / IMPULSE_MAX
+	
+	arrow.scale.x = (_arrow_scale_x * perc) + _arrow_scale_x
+	
 	arrow.rotation = (_start - position).angle()
 
 func play_stretch_sound() -> void:
